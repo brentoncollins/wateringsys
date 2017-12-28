@@ -121,7 +121,11 @@ def main():
 	maxping = round(max(ping_time))
 	minping = round(max(ping_time))
 		# Same as above but only using the lists that are used if it a single test.
-			
+	
+	downspeed.reverse()
+	upspeed.reverse()
+	time_now.reverse()
+	
 	# Start of the plotting.	
 	x = np.arange(1,len(time_now)+1)								
 	# Set the x axis points.

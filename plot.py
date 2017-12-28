@@ -42,7 +42,9 @@ def plot_data():
 		hour,pertemp,perthhumid = csv_reader_single()
 	
 		
-
+		hour.reverse()
+		pertemp.reverse()
+		perthhumid.reverse()
 
 	
 		### STARTING THE PLOT ###
@@ -53,7 +55,7 @@ def plot_data():
 		fig, ax1 = plt.subplots()	## set the plot type with the first plot as ax1 figsize=(20, 10)
 		plt.grid()							## set the grit behind the plot
 		#s1 = np.arange(1,len(time)+1)		## setting the lenght of x and the spacing/occorance but it has already been done..
-		ax1.plot(x, pertemp, c='#FF6347', label='Balcony Temp') ##palctemp		## setting the plot line, x for the bottom points, temp to take the y points on the plot, color
+		ax1.plot(x, pertemp, c='#FF6347', label='Perth Temperature') ##palctemp		## setting the plot line, x for the bottom points, temp to take the y points on the plot, color
 		#ax1.set_xlabel('Time of day')		## set the x spine lable
 		ax1.set_ylabel('Temperature', color='#FF6347')	# Make the y-axis label, ticks and tick labels match the line color.
 		ax1.tick_params('y', colors='#FF6347')	## set the ???? work it out later?
@@ -71,7 +73,11 @@ def plot_data():
 		nearesthumidity = int(math.ceil((min(perthhumid) / 10.0))) * 10
 		ax3.set_yticks(np.arange(nearesthumidity -5, max(perthhumid)+5, 5))
 		ax3.spines['right'].set_position(('axes', 1.07))					## MOVE SPINE TO THE RIGHT A LITTLE FURTHER.
-
+		
+		h1, l1 = ax1.get_legend_handles_labels()
+		h3, l3 = ax3.get_legend_handles_labels()
+		plt.legend(h1+h3, l1+l3, loc=1)
+		
 		fig.tight_layout()
 		fig.set_size_inches(6.4, 3.30)
 		plt.gcf().subplots_adjust(bottom=0.22)
