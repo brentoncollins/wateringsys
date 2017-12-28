@@ -1,0 +1,22 @@
+[Unit]
+
+Description=My Script Service 
+After=multi-user.target
+
+[Service]
+
+Type=idle 
+ExecStart=/usr/bin/python3 /home/pi/wateringsys/pumptimer.py
+
+[Install]
+
+WantedBy=multi-user.target
+
+## Run these commands to get the pump timer running as a service
+
+## cp pumptimer.service /lib/systemd/system/
+## chmod 644 /lib/systemd/system/pumptimer.service
+## systemctl daemon-reload
+## systemctl enable pumptimer.service
+## systemctl start pumptimer.service
+
