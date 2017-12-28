@@ -37,8 +37,6 @@ g_mail_login, g_mail_password,to_email_1 = get_data()
 timer_data = "/home/pi/wateringsys/timer_data.csv"
 
 
-
-
 	
 def send_email(user, pwd, recipient, subject, body):							# this is the email module.
     gmail_user = user
