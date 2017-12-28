@@ -7,8 +7,6 @@ import matplotlib
 matplotlib.use('Agg') ## This helps output the image???
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import rcParams
-import matplotlib.ticker as ticker
 import math
 import csv
 
@@ -56,7 +54,7 @@ def plot_data():
 		plt.grid()							## set the grit behind the plot
 		#s1 = np.arange(1,len(time)+1)		## setting the lenght of x and the spacing/occorance but it has already been done..
 		ax1.plot(x, pertemp, c='#FF6347', label='Balcony Temp') ##palctemp		## setting the plot line, x for the bottom points, temp to take the y points on the plot, color
-		ax1.set_xlabel('Time of day')		## set the x spine lable
+		#ax1.set_xlabel('Time of day')		## set the x spine lable
 		ax1.set_ylabel('Temperature', color='#FF6347')	# Make the y-axis label, ticks and tick labels match the line color.
 		ax1.tick_params('y', colors='#FF6347')	## set the ???? work it out later?
 		ax1.set_yticks(np.arange(round(min(pertemp))-2, max(pertemp)+2, 2.0))	## set the arangment of y ticks max and minimum, I have rounded the
@@ -76,7 +74,8 @@ def plot_data():
 
 		fig.tight_layout()
 		fig.set_size_inches(6.4, 3.30)
+		plt.gcf().subplots_adjust(bottom=0.22)
 		plt.savefig(plot_image, dpi=100)	# save the figure to file
-		print ("\nPlot Complete...")
+		print ("Weather Plot Complete...")
 	except TypeError:
 		pass

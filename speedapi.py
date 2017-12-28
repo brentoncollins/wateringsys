@@ -13,8 +13,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import rcParams
-import matplotlib.ticker as ticker
 import math
 import shutil
 
@@ -165,7 +163,7 @@ def main():
 	ax3.plot(x, ping_time, c = '#006400', linestyle=':',label='Ping API')
 	ax3.set_ylabel('Ping', color='#006400')
 	ax3.tick_params('y', colors='#006400')
-	ax3.set_yticks(np.arange(0, maxping +150,10))
+	ax3.set_yticks(np.arange(0, maxping +150,20))
 	ax3.spines['right'].set_position(('axes', 1.15))
 	
 	
@@ -176,7 +174,9 @@ def main():
 	plt.legend(h1+h2+h3, l1+l2+l3, loc=1)
 	# Setup the legend
 	fig.tight_layout()
-	fig.set_size_inches(8.4, 4.45)
+	fig.set_size_inches(6.4, 3.30)
+	plt.gcf().subplots_adjust(bottom=0.3)
+
 	
 	try:
 		plt.savefig(speed_img, dpi=100)	# save the figure to file
@@ -186,5 +186,4 @@ def main():
 		
 	print ("Plot Complete...\nDownload: {} Mbps\nUpload: {} Mbps\nPing: {}s\nTime: {}"\
 	.format(str(downspeed[-1]),str(upspeed[-1]),str(ping_time[-1]),str(time.strftime("%I %p"))))
-	print ("Waiting an hour before testing again.\n")
 

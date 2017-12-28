@@ -235,18 +235,6 @@ class timers(object):
 			timer_status_1.set(str(timer_time_string))
 			timer_status.set("Please enter a time, recurrence rate and timer length")
 		
-def new_win_isp(): # Simple Internet-Speed-Plot window no need for a class.
-	global speed_image
-	isp_win = Toplevel(root)
-	speed_img = ImageTk.PhotoImage(Image.open(speed_image))#/home/pi/html/
-	speed_panel = Label(isp_win, image = speed_img)
-	speed_panel.image = speed_img
-	isp_win_close_button = Button(isp_win,text="Close Window",command=isp_win.destroy, height = 3, width = 15)
-	isp_win_close_button.grid()
-	speed_panel.grid()
-	
-	isp_win.attributes('-fullscreen',True)
-	
 
 def timer(): # Simple timer class, 
 	try: # If any errors usually due to no input pass
@@ -309,9 +297,11 @@ def img_updater(): # Auto image updater for home screen.
 	# Open image
 		try:
 			global counter
-			plant_stat_img = ImageTk.PhotoImage(Image.open(plot_img))
-			plant_stat_panel.config(image = plant_stat_img)
-			plant_stat_panel.image = plant_stat_img
+
+			
+
+			
+			
 			timer_set_time,time_until_run = csv_read()
 
 			if GPIO.input(23) == 0:
@@ -325,8 +315,20 @@ def img_updater(): # Auto image updater for home screen.
 			counter += 1
 			if counter >= 1:
 				timer_status_1.set(str(timer_set_time))
+				
+				plant_stat_img = ImageTk.PhotoImage(Image.open(plot_img))
+				plant_stat_panel.config(image = plant_stat_img)
+				plant_stat_panel.image = plant_stat_img
+			
+				
 			if counter >= 11:
 				timer_status_1.set(str(time_until_run))
+				
+				speed_img = ImageTk.PhotoImage(Image.open(speed_image))#/home/pi/html/
+				plant_stat_panel.config(image = speed_img)
+				plant_stat_panel.image = speed_img
+				
+
 			if counter >= 21:
 				counter = 0
 			
@@ -404,7 +406,7 @@ keyboard_img = ImageTk.PhotoImage(Image.open(keyboard_image))
 keyboard_button.config(image=keyboard_img)
 keyboard_button.image = keyboard_img
 keyboard_button.grid(row = 2,sticky=E)
-isp_button = Button(root,text= "Speed Plot", command = new_win_isp, height = 3, width = 15).grid(row = 5, sticky=N,column =2)
+
 timer_button = Button(root,text= "Set Timer", command = timers, height = 3, width = 15).grid(row = 5,column =2)
 pump_timer_start_button=Button(root,text="Start Pump Timer",command = timer).grid(row = 2, sticky=W)
 

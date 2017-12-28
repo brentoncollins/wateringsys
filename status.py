@@ -20,7 +20,7 @@ GPIO.output(22, 1)                                                              
 
 # Status data
 # E-mail settings
-
+email_data = "/home/pi/wateringsys/email_data.txt"
 def get_data():
 	fp = open(email_data)
 	login = ""
@@ -176,9 +176,11 @@ if __name__ == "__main__":
 		# Once the list has been cut down to 24 again including the new data, write to the csv file again
 		# ready for reading next time.
 		csv_writer(time_list,temp_list,humid_list,water_list)
-		# Make the plot image.
-		speedapi.main()
+		# Make the plot images.
 		plot.plot_data()
+		speedapi.main()
+		
+		print ("Waiting an hour before testing again.\n")
 		
 	# Run the mail job first.	
 	main_job()
