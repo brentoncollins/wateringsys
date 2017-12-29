@@ -65,51 +65,28 @@ def speed_test():
 			s.download()
 			s.upload()	
 			results_dict = s.results.dict()
-		except:
+		except ConfigRetrievalError:
 			time.sleep(60)
 			continue
 		return results_dict
 		break
 	
-		
+def speed_plot():
+	print("Speedtest API running....")
+	print("Please Wait....")
 	
-def main():
 	downspeed=[]
 	upspeed=[]
 	ping_time=[]
 	time_now=[]
 	counter = 0
 	
-
 	try:
 		upspeed,downspeed,ping_time,time_now = csv_reader_single()
 	except:
 		print("Empty List")
-		
 	
-	now = datetime.now()
-	seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
-	if seconds_since_midnight > 1 and seconds_since_midnight < 100:
-		try:
-			timestr = str(time.strftime("%d-%m-%Y"))
-			shutil.copy(speed_img, "/home/pi/wateringsys/speed_logs/{}.png".format(timestr))
-		except FileNotFoundError:
-			if not os.path.exists('/home/pi/wateringsys/speed_logs'):
-				os.mkdir('/home/pi/wateringsys/speed_logs')
-				timestr = str(time.strftime("%d-%m-%Y"))
-				shutil.copy(speed_img, "/home/pi/wateringsys/speed_logs/{}.png".format(timestr))
-		
-		
-	# If the length of the list of time values is more then 25, make a copy of the plot image,
-	# then set the counter to 0 to wait for another 24 hours of testing before copying again.
-		
-
-	print("Speedtest API running....")
-	print("Please Wait....")
-
 	results_dict = speed_test()
-
-		
 
 	download_now = float(round(results_dict['download']/1000000,2))
 	upload_now = float(round(results_dict['upload']/1000000,2))
@@ -208,3 +185,23 @@ def main():
 	print ("Plot Complete...\nDownload: {} Mbps\nUpload: {} Mbps\nPing: {}s\nTime: {}"\
 	.format(str(downspeed[-1]),str(upspeed[-1]),str(ping_time[-1]),str(time.strftime("%I %p"))))
 
+		
+	
+def main():
+	speed_plot()
+	now = datetime.now()
+	seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+	if seconds_since_midnight > 1 and seconds_since_midnight < 100:
+		try:
+			timestr = str(time.strftime("%d-%m-%Y"))
+			shutil.copy(speed_img, "/home/pi/wateringsys/speed_logs/{}.png".format(timestr))
+		except FileNotFoundError:
+			if not os.path.exists('/home/pi/wateringsys/speed_logs'):
+				os.mkdir('/home/pi/wateringsys/speed_logs')
+				timestr = str(time.strftime("%d-%m-%Y"))
+				shutil.copy(speed_img, "/home/pi/wateringsys/speed_logs/{}.png".format(timestr))
+		
+		
+	# If the length of the list of time values is more then 25, make a copy of the plot image,
+	# then set the counter to 0 to wait for another 24 hours of testing before copying again.
+		
