@@ -167,7 +167,7 @@ while True:
 					# Set GPIO 24 output to low to turn the solid state relay off.
 					GPIO.output (24 , 0)
 					# Send the email that the pump has run.
-					send_email(g_mail_login, g_mail_password, to_email_1,"PUMPTIMER RUN",\
+					send_email(str(g_mail_login), str(g_mail_password), str(to_email_1),"PUMPTIMER RUN",\
 					"The pumptimer has run @ {}".format(execute_time))
 
 					print("\nTimelog Entered\n\nPump timer running for {} seconds".format(str(runtime)))

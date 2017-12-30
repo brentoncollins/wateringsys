@@ -54,7 +54,7 @@ def csv_reader_single():
 def speed_test():
 	for i in range (1,10):
 		try:
-	
+			
 			servers =[]
 			# If you want to test against a specific server visit https://www.speedtestserver.com/
 			# and find a server you want to test with e.g. servers = [2627] which is Perth
@@ -65,7 +65,7 @@ def speed_test():
 			s.download()
 			s.upload()	
 			results_dict = s.results.dict()
-		except ConfigRetrievalError:
+		except:
 			time.sleep(60)
 			continue
 		return results_dict
