@@ -11,6 +11,7 @@ sudo git clone https://github.com/brentoncollins/wateringsys.git
 ```
 sudo python3 setup.py install
 sudo apt-get install python3-pil.imagetk
+sudo apt-get install xscreensaver
 ```
 ## Run these commands to get the pump timer running as a service
 ```
@@ -24,6 +25,7 @@ sudo systemctl enable pumptimer.service
 sudo systemctl enable status.service
 sudo systemctl start pumptimer.service
 sudo systemctl start status.service
+sudo chmod +x screen-off.pl
 
 ```
 ### Usage Information
