@@ -1,5 +1,5 @@
-#!/usr/bin/python !/
-
+#!/usr/bin/env python3
+import gc
 import pyowm
 import smtplib
 import time
@@ -61,17 +61,20 @@ def csv_reader_single():
 			temp_list=[]
 			humid_list=[]
 			level_list= []
+		
 			try:
 				for row in readCSV:
 					time_list.append(row[0])
 					temp_list.append(row[1])
 					humid_list.append(row[2])
 					level_list.append(row[3])
+		
 			except IndexError:
 				print ('Empty List')
 				pass
-		return time_list,temp_list,humid_list,level_list
-		csvfile.close()
+			csvfile.close()
+			return time_list,temp_list,humid_list,level_list
+		
 
 	except IOError:
 		print('Please open as user that has permission to write to data.csv')
@@ -100,17 +103,21 @@ def send_email(user, pwd, recipient, subject, body):							# this is the email m
 		
 
 def weather_observation():
-	#try:
-		owm = pyowm.OWM('580dcf4a5f151c26f841df7ee95484cd')  # You MUST provide a valid API key
-		observation = owm.weather_at_coords(-31.9528, 115.8605)
-		w = observation.get_weather()
-		humidity = str(w.get_humidity())
-		temp = str(w.get_temperature('celsius')['temp'])
-		hours12 = time.strftime("%I %p")
-		print ("Perth relative humidity is {}".format(humidity))
-		print ("Perth temperature is {}".format(temp))
-		return hours12,temp,humidity
-	#except:
+	while True:
+		try:
+			for x in range(1,10):
+				owm = pyowm.OWM('580dcf4a5f151c26f841df7ee95484cd')  # You MUST provide a valid API key
+				observation = owm.weather_at_coords(-31.9528, 115.8605)
+				w = observation.get_weather()
+				humidity = str(w.get_humidity())
+				temp = str(w.get_temperature('celsius')['temp'])
+				hours12 = time.strftime("%I %p")
+				print ("Perth relative humidity is {}".format(humidity))
+				print ("Perth temperature is {}".format(temp))
+				return hours12,temp,humidity
+		except:
+				time.sleep(60)
+				continue
 		# I have has this fail to return data once or twice, I dont want it to break the program.
 		#pass
 
@@ -127,9 +134,10 @@ def water_level_check():
 		if hour_counter == 0:
 			print ("\nThe Water Level Is Low")
 			send_email(g_mail_login, g_mail_password, to_email_1, "Low Water Level","Please fill the water tank")
+		hour_counter += 1	
 		# Return the status for the weather data file	
 		return "Water level low"
-		hour_counter += 1
+		
 		
 		
 	if  GPIO.input(23) == 1:
@@ -138,21 +146,7 @@ def water_level_check():
 		# Return the status for the weather data file	
 		return "Water level OK"
 		
-
-
-if __name__ == "__main__":
-	hour_counter = 0
-	# Use this counter to only send an email every 12 hours if water level is low
-	hours_of_day = [3600,7200,10800,14400,18000,21600,25200,28800,32400,36000,39600,43200,46800,50400,54000,57600,61200,64800,68400,72000,75600,79200,82800,1]
-	# Part of the timer, hours in seconds. If the seconds since midnight is exqel to one of these run the main job.
-	
-	time_list=[]
-	temp_list=[]
-	humid_list=[]
-	water_list = []
-	# Empty lists used for the weather data file
-	
-	def main_job():
+def main_job():
 		print (time.strftime("%I:%M:%S"))
 		print ('\nRunning Moisture, Level, Temp and Plot jobs. The jobs will run on the hour every hour')
 		
@@ -178,9 +172,24 @@ if __name__ == "__main__":
 		csv_writer(time_list,temp_list,humid_list,water_list)
 		# Make the plot images.
 		plot.plot_data()
-		speedapi.main()
-		
+		#speedapi.main()
+		gc.collect()
 		print ("Waiting an hour before testing again.\n")
+		
+
+if __name__ == "__main__":
+	hour_counter = 0
+	# Use this counter to only send an email every 12 hours if water level is low
+	hours_of_day = [3600,7200,10800,14400,18000,21600,25200,28800,32400,36000,39600,43200,46800,50400,54000,57600,61200,64800,68400,72000,75600,79200,82800,1]
+	# Part of the timer, hours in seconds. If the seconds since midnight is exqel to one of these run the main job.
+	
+	time_list=[]
+	temp_list=[]
+	humid_list=[]
+	water_list = []
+	# Empty lists used for the weather data file
+	
+	
 		
 	# Run the mail job first.	
 	main_job()
@@ -190,6 +199,7 @@ if __name__ == "__main__":
 		time.sleep(1)
 		now = datetime.now()
 		seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+		gc.collect()
 		# Loop threw the list of hours of the day in seconds, if seconds since midnight is > one of these values but less than 2 seconds
 		# after then run the main job.
 		for x in hours_of_day:

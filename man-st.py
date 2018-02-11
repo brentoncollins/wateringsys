@@ -6,12 +6,6 @@ import time
 import MySQLdb as my
 import sys
 
-db = my.connect(host="192.168.1.2",
-user="bobcat",
-passwd="athlon21",
-db="data"
-)
-
 cursor = db.cursor()
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)

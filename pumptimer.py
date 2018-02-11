@@ -1,5 +1,4 @@
-#!/usr/bin/python
-#!/
+#!/usr/bin/env python3
 import RPi.GPIO as GPIO
 import time
 from datetime import datetime
@@ -148,8 +147,8 @@ while True:
 							print ("The the water level is low the pump will not turn on.")
 							send_email(g_mail_login, g_mail_password, to_email_1,"Failed Pump Run",\
 							"The pump tried to run, it failed to run due to the water level being low")
-							print ("Sleeping for 6 hours.")
-							time.sleep(60)
+							print ("Sleeping for 24 hours.")
+							time.sleep(86400)
 							
 						else:
 							# When breaking out of the loop stop_time will set the new stop_time in seconds since newyear.
@@ -162,7 +161,11 @@ while True:
 					GPIO.output (24 , 1)
 					# Set GPIO output 24 output to high to turn the solid state relay on. 
 					print ("The pump will run for {} seconds".format(runtime))	
-					time.sleep (runtime)		
+					for x in range (1,runtime):
+						time.sleep(1)
+						if GPIO.input(23) == 0:
+							GPIO.output (24 , 0)
+							
 					# Sleep while the pump runs
 					# Set GPIO 24 output to low to turn the solid state relay off.
 					GPIO.output (24 , 0)

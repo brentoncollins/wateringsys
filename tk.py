@@ -43,7 +43,7 @@ keyboard_image = "keypad.jpg"
 timer_data = 'timer_data.csv'
 plot_img = "temp.png"
 screen_off = "perl /home/pi/wateringsys/screen-off.pl"
-speed_image = "speed.png"
+speed_image = "/home/pi/isp/speed.png"
 
 class numpad():
 

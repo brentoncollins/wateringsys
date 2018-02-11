@@ -1,4 +1,4 @@
-#!/usr/bin/python !/
+#!/usr/bin/env python3
 # This script grabs a heap of MYSQL data and plots it with matplotlib, still learing..... please be gentle.....
 
 import sys
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import csv
-
+import gc
 # Data files
 weather_data = "/home/pi/wateringsys/weather_data.csv"
 plot_image = '/home/pi/wateringsys/temp.png'
@@ -83,5 +83,6 @@ def plot_data():
 		plt.gcf().subplots_adjust(bottom=0.22)
 		plt.savefig(plot_image, dpi=100)	# save the figure to file
 		print ("Weather Plot Complete...")
+		gc.collect()
 	except TypeError:
 		pass

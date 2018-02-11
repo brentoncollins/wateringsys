@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import shutil
-
+import gc
 speed_img = '/home/pi/wateringsys/speed.png'
 speed_data ='/home/pi/wateringsys/speed_data.csv'
 def csv_writer(up=[],down=[],ping=[],time_now = []):
@@ -191,10 +191,12 @@ def main():
 	speed_plot()
 	now = datetime.now()
 	seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+	gc.collect()
 	if seconds_since_midnight > 1 and seconds_since_midnight < 100:
 		try:
 			timestr = str(time.strftime("%d-%m-%Y"))
 			shutil.copy(speed_img, "/home/pi/wateringsys/speed_logs/{}.png".format(timestr))
+			
 		except FileNotFoundError:
 			if not os.path.exists('/home/pi/wateringsys/speed_logs'):
 				os.mkdir('/home/pi/wateringsys/speed_logs')
