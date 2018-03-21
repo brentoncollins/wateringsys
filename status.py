@@ -37,7 +37,7 @@ def get_data():
 	return login,passwd,to_email
 	
 g_mail_login, g_mail_password,to_email_1 = get_data()	
-
+water_level_data = "/home/pi/wateringsys/water_level.txt"
 weather_data = "/home/pi/wateringsys/weather_data.csv"
 
 
@@ -121,27 +121,50 @@ def weather_observation():
 		# I have has this fail to return data once or twice, I dont want it to break the program.
 		#pass
 
+def empty_level_writer(hour):
+	try:	
+		with open(water_level_data,"w") as f:
 
+				run_status = f.write(hour)
+				f.close()
+	except IOError:
+		print('Please open as user that has permission to write to water_level.txt')
+
+def empty_level_reader():
+	try:	
+		with open(water_level_data,"r") as f:
+			run_status = f.readline()
+		
+			f.close()
+			return run_status
+	except IOError:
+		print('Please open as user that has permission to write to water_level.txt')
 
 
 def water_level_check():
-	global hour_counter
 	# Reset the hour counter every 12 hours, I dont wan an email every hour.
+		
 	if GPIO.input(23) == 0:   
-		if hour_counter == 12:
+		try:
+			hour_counter = int(empty_level_reader())
+		except ValueError:
 			hour_counter = 0
+
+		if hour_counter == 12:
+			empty_level_writer(str(0))
+
 		# Only sent the email every 12 hours.
 		if hour_counter == 0:
 			print ("\nThe Water Level Is Low")
 			send_email(g_mail_login, g_mail_password, to_email_1, "Low Water Level","Please fill the water tank")
-		hour_counter += 1	
+		empty_level_writer(str(hour_counter + 1))
 		# Return the status for the weather data file	
 		return "Water level low"
 		
 		
 		
 	if  GPIO.input(23) == 1:
-		hour_counter = 0
+		empty_level_writer(str(0))
 		print ("Water Level Ok")
 		# Return the status for the weather data file	
 		return "Water level OK"
@@ -172,15 +195,14 @@ def main_job():
 		csv_writer(time_list,temp_list,humid_list,water_list)
 		# Make the plot images.
 		plot.plot_data()
-		#speedapi.main()
-		gc.collect()
+		speedapi.main()
 		print ("Waiting an hour before testing again.\n")
 		
 
 if __name__ == "__main__":
-	hour_counter = 0
+	# hour_counter = 0
 	# Use this counter to only send an email every 12 hours if water level is low
-	hours_of_day = [3600,7200,10800,14400,18000,21600,25200,28800,32400,36000,39600,43200,46800,50400,54000,57600,61200,64800,68400,72000,75600,79200,82800,1]
+	# hours_of_day = [3600,7200,10800,14400,18000,21600,25200,28800,32400,36000,39600,43200,46800,50400,54000,57600,61200,64800,68400,72000,75600,79200,82800,1]
 	# Part of the timer, hours in seconds. If the seconds since midnight is exqel to one of these run the main job.
 	
 	time_list=[]
@@ -194,19 +216,18 @@ if __name__ == "__main__":
 	# Run the mail job first.	
 	main_job()
 	
-	# Start the timer.
-	while True:
-		time.sleep(1)
-		now = datetime.now()
-		seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
-		gc.collect()
-		# Loop threw the list of hours of the day in seconds, if seconds since midnight is > one of these values but less than 2 seconds
-		# after then run the main job.
-		for x in hours_of_day:
-			if seconds_since_midnight > x and seconds_since_midnight < x + 2:
-				print ("Program ran at {} seconds since midnight\n".format(seconds_since_midnight))
-				print ("It was set to run at {} seconds since midnight\n".format(x))
-				main_job()
+	## Start the timer.
+	# while True:
+		# time.sleep(1)
+		# now = datetime.now()
+		# seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+		## Loop threw the list of hours of the day in seconds, if seconds since midnight is > one of these values but less than 2 seconds
+		## after then run the main job.
+		# for x in hours_of_day:
+			# if seconds_since_midnight > x and seconds_since_midnight < x + 2:
+				# print ("Program ran at {} seconds since midnight\n".format(seconds_since_midnight))
+				# print ("It was set to run at {} seconds since midnight\n".format(x))
+				# main_job()
 				
 		
 
