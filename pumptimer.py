@@ -17,6 +17,11 @@ GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     # input for level switch
 
 email_data = "/home/pi/wateringsys/email_data.txt"
 
+arg = sys.argv[1]
+
+print (arg)
+
+
 def get_data():
 	fp = open(email_data)
 	login = ""
@@ -145,8 +150,7 @@ while True:
 						if GPIO.input(23) == 0:		
 						# If GPIO 23 has no input voltage the water level is low.
 							print ("The the water level is low the pump will not turn on.")
-							send_email(g_mail_login, g_mail_password, to_email_1,"Failed Pump Run",\
-							"The pump tried to run, it failed to run due to the water level being low")
+							
 							print ("Sleeping for 24 hours.")
 							time.sleep(86400)
 							
@@ -164,6 +168,8 @@ while True:
 					for x in range (1,runtime):
 						time.sleep(1)
 						if GPIO.input(23) == 0:
+							send_email(g_mail_login, g_mail_password, to_email_1,"Failed Pump Run",\
+							"The pump tried to run, it failed to run due to the water level being low")
 							GPIO.output (24 , 0)
 							
 					# Sleep while the pump runs
